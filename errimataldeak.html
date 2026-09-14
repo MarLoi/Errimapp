@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="eu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f9d76">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="errimataldeak">
+<title>errimataldeak — Errima taldeak sortu</title>
+<style>
+:root{
+  --bg1:#f5f9f7; --bg2:#eaf2ef;
+  --card:#ffffff; --text:#151d1a; --muted:#65756f; --faint:#95a29d;
+  --accent:#0f9d76; --accent2:#0c8865; --accent-soft:rgba(15,157,118,.12);
+  --best:#ffe9a3; --best-line:#f0d074; --best-text:#6b4b00;
+  --bad:#c2333f;
+  --line:#e3eae7; --soft:#f2f6f4;
+  --shadow:0 18px 45px rgba(20,45,38,.09);
+  --shadow-sm:0 4px 14px rgba(20,45,38,.06);
+  --radius:20px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg1:#101614; --bg2:#151e1b;
+    --card:#1a2320; --text:#eaf2ee; --muted:#98a8a2; --faint:#788782;
+    --accent:#4fd1a5; --accent2:#6fe0ba; --accent-soft:rgba(79,209,165,.16);
+    --best:#5a4a17; --best-line:#8a7326; --best-text:#ffe9a3;
+    --bad:#ff8b95;
+    --line:#28332f; --soft:#212b28;
+    --shadow:0 18px 45px rgba(0,0,0,.45);
+    --shadow-sm:0 4px 14px rgba(0,0,0,.3);
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+html,body{min-height:100%;overflow-x:hidden}
+body{
+  margin:0;color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:
+    radial-gradient(900px 500px at 12% -10%, var(--accent-soft), transparent 60%),
+    linear-gradient(160deg, var(--bg1), var(--bg2));
+  background-attachment:fixed;-webkit-font-smoothing:antialiased;
+}
+.app{max-width:1020px;margin:0 auto;padding:26px max(18px,env(safe-area-inset-left)) calc(120px + env(safe-area-inset-bottom))}
+
+header{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:18px}
+.brandName{font-size:25px;font-weight:850;letter-spacing:-.9px;line-height:1}
+.brandName i{font-style:normal;color:var(--accent)}
+.subtitle{color:var(--muted);font-size:13.5px;margin-top:3px}
+.pillBtn{
+  background:var(--card);border:1px solid var(--line);color:var(--muted);
+  padding:9px 15px;border-radius:999px;font-size:12.5px;font-weight:700;
+  box-shadow:var(--shadow-sm);white-space:nowrap;display:flex;align-items:center;gap:7px
+}
+.pillBtn:hover{color:var(--text);border-color:var(--accent)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--faint);flex:none}
+.dot.on{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px}
+.screen{animation:rise .35s cubic-bezier(.2,.7,.3,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+button{
+  border:0;border-radius:13px;padding:12px 19px;font-weight:700;font-size:15px;cursor:pointer;
+  font-family:inherit;transition:transform .12s ease,background .15s ease,box-shadow .15s ease;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:44px
+}
+button:active{transform:translateY(1px) scale(.99)}
+.primary{background:var(--accent);color:#fff;box-shadow:0 10px 22px rgba(15,157,118,.26)}
+.primary:hover{background:var(--accent2)}
+.primary:disabled{background:var(--line);color:var(--faint);box-shadow:none;cursor:not-allowed}
+.secondary{background:var(--soft);color:var(--text);border:1px solid var(--line)}
+.secondary:hover{background:var(--line)}
+.big{padding:15px 28px;font-size:16.5px;border-radius:15px}
+
+/* ---------- hasiera ---------- */
+.setup{text-align:center}
+.kicker{display:inline-block;font-size:12px;letter-spacing:1.6px;text-transform:uppercase;font-weight:800;
+  color:var(--accent);background:var(--accent-soft);padding:6px 13px;border-radius:999px;margin-bottom:14px}
+.setup h1{font-size:34px;margin:0 0 12px;letter-spacing:-1.1px;line-height:1.14}
+.setup p{max-width:560px;margin:0 auto;color:var(--muted);line-height:1.6;font-size:15.5px}
+.steps{display:grid;gap:10px;max-width:460px;margin:24px auto;text-align:left}
+.step{display:flex;gap:12px;align-items:flex-start;background:var(--soft);border:1px solid var(--line);
+  padding:13px 15px;border-radius:13px;font-size:14px;color:var(--muted)}
+.step b{color:var(--text)}
+.stepNum{width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;flex:none;
+  display:grid;place-items:center;font-size:12px;font-weight:900}
+.vaultBox{border:1px dashed var(--line);border-radius:14px;padding:15px;margin:0 auto 20px;max-width:460px}
+.vaultLine{font-size:13.5px;color:var(--muted);margin-bottom:11px}
+.vaultLine b{color:var(--text)}
+.warn{font-size:12.5px;color:var(--faint);margin-top:10px;line-height:1.5}
+
+/* ---------- aukeraketa ---------- */
+.pick{display:none}
+.pickTop{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:6px}
+.wordLabel{text-transform:uppercase;letter-spacing:1.6px;font-size:11.5px;color:var(--faint);font-weight:800}
+.word{font-size:46px;font-weight:900;letter-spacing:-1.8px;margin:5px 0 8px;line-height:1;word-break:break-word}
+.famTag{display:inline-block;font-size:12.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);
+  padding:5px 12px;border-radius:999px}
+.tools{display:flex;gap:9px;margin:18px 0 14px;flex-wrap:wrap}
+.search{flex:1;min-width:170px;position:relative}
+.search input{
+  width:100%;font-size:16px;padding:12px 15px 12px 38px;border:2px solid var(--line);border-radius:12px;
+  outline:none;background:var(--card);color:var(--text);font-family:inherit
+}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.45}
+.toggle{background:var(--soft);border:1px solid var(--line);color:var(--muted);border-radius:12px;padding:0 15px;font-size:13.5px}
+.toggle.on{background:var(--best);border-color:var(--best-line);color:var(--best-text)}
+
+.trayWrap{background:var(--soft);border:1px solid var(--line);border-radius:15px;padding:13px 14px;margin-bottom:16px}
+.trayHead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}
+.trayTitle{font-size:11.5px;text-transform:uppercase;letter-spacing:1.3px;font-weight:800;color:var(--faint)}
+.clear{background:none;border:0;color:var(--muted);font-size:12.5px;font-weight:700;padding:2px 0;min-height:0}
+.clear:hover{color:var(--bad);text-decoration:underline}
+.tray{display:flex;flex-wrap:wrap;gap:6px;min-height:32px}
+.tray .empty{color:var(--faint);font-size:13px;padding:5px 0}
+.tray button{
+  background:var(--accent);color:#fff;border-radius:9px;padding:6px 9px 6px 11px;font-size:13px;font-weight:700;
+  min-height:0;display:flex;align-items:center;gap:6px
+}
+.tray button span{opacity:.7;font-size:15px;line-height:1}
+.tray button.best{background:var(--best);color:var(--best-text)}
+
+.listHead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px}
+.listHead h3{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:1.3px;color:var(--faint);font-weight:800}
+.listCount{font-size:12.5px;color:var(--faint)}
+.grid{display:flex;flex-wrap:wrap;gap:6px;max-height:46vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;padding:2px}
+.chip{
+  background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:7px 11px;
+  font-size:13.5px;font-weight:600;min-height:0
+}
+.chip:hover{border-color:var(--accent)}
+.chip.best{background:var(--best);border-color:var(--best-line);color:var(--best-text);font-weight:800}
+.chip.sel{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip.sel.best{background:var(--best-line);border-color:var(--best-line);color:var(--best-text)}
+.chip.hide{display:none}
+.noRes{color:var(--faint);font-size:13.5px;padding:8px 2px}
+
+/* ---------- gorde barra ---------- */
+.saveBar{
+  position:fixed;left:0;right:0;bottom:0;z-index:20;display:none;
+  padding:12px max(14px,env(safe-area-inset-left)) calc(12px + env(safe-area-inset-bottom));
+  background:var(--card);border-top:1px solid var(--line);box-shadow:0 -8px 30px rgba(20,45,38,.10)
+}
+.saveBar.on{display:block}
+.saveInner{max-width:1020px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.saveCount{flex:1;min-width:0;font-size:13.5px;color:var(--muted);line-height:1.35}
+.saveCount b{color:var(--text);font-size:19px;font-weight:850}
+
+/* ---------- amaiera ---------- */
+.done{display:none;text-align:center}
+.doneIcon{width:62px;height:62px;border-radius:50%;background:var(--accent-soft);color:var(--accent);
+  display:grid;place-items:center;margin:0 auto 16px;font-size:30px;font-weight:900}
+.done h2{margin:0 0 8px;font-size:26px;letter-spacing:-.7px}
+.done p{color:var(--muted);margin:0 auto 6px;max-width:440px;line-height:1.55}
+.fileName{display:inline-block;background:var(--soft);border:1px solid var(--line);border-radius:9px;
+  padding:6px 12px;font-size:13.5px;font-weight:700;margin-top:6px;word-break:break-all}
+.preview{
+  text-align:left;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:15px;
+  margin-top:20px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;
+  color:var(--muted);white-space:pre-wrap;max-height:230px;overflow:auto;line-height:1.55
+}
+.doneActions{display:flex;justify-content:center;gap:10px;margin-top:22px;flex-wrap:wrap}
+
+@media(max-width:640px){
+  .app{padding:14px 14px calc(120px + env(safe-area-inset-bottom))}
+  .card{padding:18px 16px;border-radius:18px}
+  .subtitle{display:none}
+  .brandName{font-size:21px}
+  .setup h1{font-size:25px}
+  .setup p{font-size:14.5px}
+  .step{font-size:13.5px;padding:11px 13px}
+  .word{font-size:clamp(30px,10vw,42px)}
+  .pickTop{flex-direction:column;gap:10px}
+  .pickTop .secondary{width:100%}
+  .tools{gap:8px;margin:14px 0 12px}
+  .toggle{width:100%;padding:11px 15px}
+  .grid{max-height:38vh}
+  .big{width:100%}
+  .doneActions{flex-direction:column}
+  .doneActions button{width:100%}
+  .preview{font-size:11.5px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div onclick="show('setup')" style="cursor:pointer">
+    <div class="brandName">errima<i>taldeak</i></div>
+    <div class="subtitle">Gaiaren araberako errima multzoak</div>
+  </div>
+  <button id="vaultBtn" class="pillBtn" onclick="connectVault()">
+    <span id="vaultDot" class="dot"></span><span id="vaultLabel">Karpeta lotu</span>
+  </button>
+</header>
+
+<section id="setup" class="card setup screen">
+  <div class="kicker">Bertsotarako tresna</div>
+  <h1>Errimak badituzu. Orain, taldeak.</h1>
+  <p>Hitz bat emango dizugu bere errima guztiekin. Zuk hitz horri ondoen datozkionak aukeratu, eta taldea Obsidian-en gordeko dugu.</p>
+
+  <div class="steps">
+    <div class="step"><div class="stepNum">1</div><div>Obsidian-eko <b>karpeta lotu</b> (behin bakarrik).</div></div>
+    <div class="step"><div class="stepNum">2</div><div>Ausazko hitz bat eta bere errima guztiak jasoko dituzu.</div></div>
+    <div class="step"><div class="stepNum">3</div><div>Gaiari <b>ondoen datozkionak</b> markatu eta gorde.</div></div>
+  </div>
+
+  <div class="vaultBox">
+    <div id="vaultState" class="vaultLine">Ez dago karpetarik lotuta.</div>
+    <button class="secondary" onclick="connectVault()">Obsidian karpeta aukeratu</button>
+    <div id="vaultWarn" class="warn"></div>
+  </div>
+
+  <button class="primary big" onclick="newWord()">Hasi</button>
+</section>
+
+<section id="pick" class="card pick">
+  <div class="pickTop">
+    <div>
+      <div class="wordLabel">Hitza</div>
+      <div id="word" class="word">—</div>
+      <div id="fam" class="famTag">—</div>
+    </div>
+    <button class="secondary" onclick="newWord()">Beste hitz bat</button>
+  </div>
+
+  <div class="tools">
+    <div class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path>
+      </svg>
+      <input id="filter" type="search" autocomplete="off" placeholder="Bilatu errima…">
+    </div>
+    <button id="bestOnly" class="toggle" onclick="toggleBest()">★ Onenak soilik</button>
+  </div>
+
+  <div class="trayWrap">
+    <div class="trayHead">
+      <div class="trayTitle">Aukeratutakoak</div>
+      <button class="clear" onclick="clearAll()">Garbitu</button>
+    </div>
+    <div id="tray" class="tray"></div>
+  </div>
+
+  <div class="listHead">
+    <h3>Errima guztiak</h3>
+    <div id="listCount" class="listCount"></div>
+  </div>
+  <div id="grid" class="grid"></div>
+  <div id="noRes" class="noRes" style="display:none">Ez da bat ere aurkitu.</div>
+</section>
+
+<section id="done" class="card done">
+  <div class="doneIcon">✓</div>
+  <h2>Taldea gordeta</h2>
+  <p id="doneWhere">Obsidian karpetan gordeta.</p>
+  <div id="doneFile" class="fileName"></div>
+  <div id="preview" class="preview"></div>
+  <div class="doneActions">
+    <button class="primary big" onclick="newWord()">Beste talde bat</button>
+    <button class="secondary" onclick="show('setup')">Hasierara</button>
+  </div>
+</section>
+</div>
+
+<div id="saveBar" class="saveBar">
+  <div class="saveInner">
+    <div class="saveCount"><b id="selCount">0</b> errima aukeratuta</div>
+    <button id="saveBtn" class="primary" onclick="saveGroup()" disabled>Taldea gorde</button>
+  </div>
+</div>
+
+<script>
+const DATA = {"npe":[{"word":"pikante","best":true},{"word":"amante","best":true},{"word":"interesante","best":true},{"word":"inportante","best":true},{"word":"brillante","best":true},{"word":"amorante","best":true},{"word":"elegante","best":true},{"word":"defoliante","best":false},{"word":"kuante","best":false},{"word":"sextante","best":false},{"word":"estudiante","best":false},{"word":"niktitante","best":false},{"word":"transplante","best":false},{"word":"aberrante","best":false},{"word":"komediante","best":false},{"word":"tolerante","best":false},{"word":"bustamante","best":false},{"word":"emigrante","best":false},{"word":"konkomitante","best":false},{"word":"nazkante","best":false},{"word":"estante","best":false},{"word":"tanke","best":false},{"word":"fulminante","best":false},{"word":"erresonante","best":false},{"word":"digante","best":false},{"word":"karburante","best":false},{"word":"protestante","best":false},{"word":"koadrante","best":false},{"word":"trafikante","best":false},{"word":"cascante","best":false},{"word":"krokante","best":false},{"word":"determinante","best":false},{"word":"erresultante","best":false},{"word":"tirante","best":false},{"word":"erdikontsonante","best":false},{"word":"kontsonante","best":false},{"word":"levante","best":false},{"word":"inbariante","best":false},{"word":"goiante","best":false},{"word":"inplante","best":false},{"word":"diamante","best":false},{"word":"fabrikante","best":false},{"word":"oihanpe","best":false},{"word":"terebrante","best":false},{"word":"sestante","best":false},{"word":"konstante","best":false},{"word":"bariante","best":false},{"word":"demandante","best":false},{"word":"elefante","best":false},{"word":"transhumante","best":false},{"word":"intolerante","best":false},{"word":"bakante","best":false},{"word":"courante","best":false},{"word":"oktante","best":false},{"word":"imigrante","best":false},{"word":"ante","best":false},{"word":"tunante","best":false},{"word":"antitanke","best":false},{"word":"asonante","best":false},{"word":"disonante","best":false},{"word":"erredundante","best":false},{"word":"figurante","best":false},{"word":"jigante","best":false},{"word":"subdominante","best":false},{"word":"laxante","best":false},{"word":"arbotante","best":false},{"word":"sekante","best":false},{"word":"atalante","best":false},{"word":"sibilante","best":false},{"word":"atlante","best":false},{"word":"murchante","best":false},{"word":"sonante","best":false},{"word":"infante","best":false},{"word":"almirante","best":false},{"word":"kosekante","best":false},{"word":"enkante","best":false},{"word":"escalante","best":false},{"word":"arranke","best":false},{"word":"immigrante","best":false},{"word":"dominante","best":false},{"word":"tripulante","best":false},{"word":"desodorante","best":false},{"word":"triunfante","best":false},{"word":"praktikante","best":false},{"word":"pedante","best":false},{"word":"mutante","best":false},{"word":"mediante","best":false},{"word":"tratante","best":false},{"word":"andante","best":false},{"word":"militante","best":false},{"word":"inkonstante","best":false},{"word":"xenotransplante","best":false},{"word":"beligerante","best":false},{"word":"villasante","best":false},{"word":"superdominante","best":false},{"word":"komandante","best":false},{"word":"durbante","best":false},{"word":"kaskante","best":false},{"word":"nekromante","best":false},{"word":"bolante","best":false},{"word":"menpe","best":true},{"word":"diferente","best":true},{"word":"dezente","best":true},{"word":"urgente","best":true},{"word":"desobediente","best":false},{"word":"indiferente","best":false},{"word":"dekadente","best":false},{"word":"oriente","best":false},{"word":"koziente","best":false},{"word":"inpotente","best":false},{"word":"fosforeszente","best":false},{"word":"inteligente","best":false},{"word":"kointzidente","best":false},{"word":"intendente","best":false},{"word":"monobalente","best":false},{"word":"llorente","best":false},{"word":"bixente","best":false},{"word":"ekipolente","best":false},{"word":"presente","best":false},{"word":"eszipiente","best":false},{"word":"demente","best":false},{"word":"inkongruente","best":false},{"word":"lafuente","best":false},{"word":"disidente","best":false},{"word":"detergente","best":false},{"word":"dibergente","best":false},{"word":"independente","best":false},{"word":"inkontinente","best":false},{"word":"valente","best":false},{"word":"puente","best":false},{"word":"eferente","best":false},{"word":"erreferente","best":false},{"word":"tetrabalente","best":false},{"word":"gerente","best":false},{"word":"lente","best":false},{"word":"izenpe","best":false},{"word":"mereziente","best":false},{"word":"eszelente","best":false},{"word":"sallabente","best":false},{"word":"eferbeszente","best":false},{"word":"autosufiziente","best":false},{"word":"superintendente","best":false},{"word":"estupefaziente","best":false},{"word":"efluente","best":false},{"word":"adjazente","best":false},{"word":"paziente","best":false},{"word":"komeniente","best":false},{"word":"intrantsigente","best":false},{"word":"kotangente","best":false},{"word":"koefiziente","best":false},{"word":"tente","best":false},{"word":"anbibalente","best":false},{"word":"dehiszente","best":false},{"word":"konbergente","best":false},{"word":"akreszente","best":false},{"word":"subkontziente","best":false},{"word":"polibalente","best":false},{"word":"akzidente","best":false},{"word":"delikueszente","best":false},{"word":"bibalente","best":false},{"word":"presidente","best":false},{"word":"kontziente","best":false},{"word":"espediente","best":false},{"word":"kontingente","best":false},{"word":"prekontziente","best":false},{"word":"frente","best":false},{"word":"kontinente","best":false},{"word":"inexistente","best":false},{"word":"konkurrente","best":false},{"word":"erresinstente","best":false},{"word":"inpenitente","best":false},{"word":"preferente","best":false},{"word":"batiente","best":false},{"word":"klemente","best":false},{"word":"birrefringente","best":false},{"word":"parapente","best":false},{"word":"konpetente","best":false},{"word":"patente","best":false},{"word":"koherente","best":false},{"word":"monorrefringente","best":false},{"word":"deskontziente","best":false},{"word":"aferente","best":false},{"word":"intzidente","best":false},{"word":"bizente","best":false},{"word":"totipotente","best":false},{"word":"agente","best":false},{"word":"konkreszente","best":false},{"word":"deferente","best":false},{"word":"deponente","best":false},{"word":"valiente","best":false},{"word":"interkurrente","best":false},{"word":"derrepente","best":false},{"word":"superkontinente","best":false},{"word":"adoleszente","best":false},{"word":"inkontsekuente","best":false},{"word":"kobalente","best":false},{"word":"solamente","best":false},{"word":"vicente","best":false},{"word":"inkonpetente","best":false},{"word":"pubeszente","best":false},{"word":"lorente","best":false},{"word":"dibalente","best":false},{"word":"transzendente","best":false},{"word":"konfidente","best":false},{"word":"tangente","best":false},{"word":"emoliente","best":false},{"word":"tribalente","best":false},{"word":"entente","best":false},{"word":"erresistente","best":false},{"word":"asistente","best":false},{"word":"esponente","best":false},{"word":"errefringente","best":false},{"word":"komitente","best":false},{"word":"elokuente","best":false},{"word":"pertinente","best":false},{"word":"trente","best":false},{"word":"opaleszente","best":false},{"word":"martzeszente","best":false},{"word":"permanente","best":false},{"word":"dehiskente","best":false},{"word":"inozente","best":false},{"word":"absente","best":false},{"word":"luminiszente","best":false},{"word":"intermitente","best":false},{"word":"immanente","best":false},{"word":"efiziente","best":false},{"word":"kontsekuente","best":false},{"word":"penitente","best":false},{"word":"indehiszente","best":false},{"word":"delinkuente","best":false},{"word":"lumineszente","best":false},{"word":"fluoreszente","best":false},{"word":"mordente","best":false},{"word":"charente","best":false},{"word":"azpikontziente","best":false},{"word":"dekurrente","best":false},{"word":"efloreszente","best":false},{"word":"eszedente","best":false},{"word":"okzidente","best":false},{"word":"azpikontinente","best":false},{"word":"obediente","best":false},{"word":"inkoherente","best":false},{"word":"clemente","best":false},{"word":"gradiente","best":false},{"word":"inuzente","best":false},{"word":"teniente","best":false},{"word":"indezente","best":false},{"word":"kongruente","best":false},{"word":"inkontziente","best":false},{"word":"beinke","best":true},{"word":"geinke","best":true},{"word":"zeinke","best":true},{"word":"aginte","best":true},{"word":"eskainte","best":false},{"word":"kinke","best":false},{"word":"teleaginte","best":false},{"word":"zainpe","best":false},{"word":"oinpe","best":false},{"word":"serboaginte","best":false},{"word":"harroinpe","best":false},{"word":"platihelminte","best":false},{"word":"horizonte","best":true},{"word":"fronte","best":true},{"word":"ponte","best":false},{"word":"korronte","best":false},{"word":"trasponte","best":false},{"word":"mastodonte","best":false},{"word":"kontrakorronte","best":false},{"word":"antifonte","best":false},{"word":"monte","best":false},{"word":"piemonte","best":false},{"word":"anakreonte","best":false},{"word":"bisonte","best":false},{"word":"xenofonte","best":false},{"word":"ponpe","best":false},{"word":"erremonte","best":false},{"word":"errinozeronte","best":false},{"word":"apunte","best":true},{"word":"ilunpe","best":false},{"word":"belaunpe","best":false},{"word":"kunke","best":false}],"ira":[{"word":"aiba","best":true},{"word":"begira","best":true},{"word":"biba","best":true},{"word":"biga","best":true},{"word":"bira","best":true},{"word":"desira","best":true},{"word":"dira","best":true},{"word":"dirdira","best":true},{"word":"erretira","best":true},{"word":"gida","best":true},{"word":"gupida","best":true},{"word":"guztira","best":true},{"word":"intriga","best":true},{"word":"liga","best":true},{"word":"mizpira","best":true},{"word":"ojiba","best":true},{"word":"partida","best":true},{"word":"tira","best":true},{"word":"abadira","best":false},{"word":"adelaida","best":false},{"word":"agerira","best":false},{"word":"aida","best":false},{"word":"aingira","best":false},{"word":"aintzira","best":false},{"word":"aisira","best":false},{"word":"akarizida","best":false},{"word":"aldaira","best":false},{"word":"alderantzira","best":false},{"word":"aliritzira","best":false},{"word":"altamira","best":false},{"word":"altarriba","best":false},{"word":"amida","best":false},{"word":"antarktida","best":false},{"word":"antartida","best":false},{"word":"apartheida","best":false},{"word":"arborizida","best":false},{"word":"arpiga","best":false},{"word":"auriga","best":false},{"word":"azpira","best":false},{"word":"baira","best":false},{"word":"bakterizida","best":false},{"word":"barriga","best":false},{"word":"basoliba","best":false},{"word":"bastida","best":false},{"word":"bederatzira","best":false},{"word":"beira","best":false},{"word":"bermizida","best":false},{"word":"bienvenida","best":false},{"word":"bigira","best":false},{"word":"bilkida","best":false},{"word":"birbira","best":false},{"word":"botiga","best":false},{"word":"brida","best":false},{"word":"brigida","best":false},{"word":"candida","best":false},{"word":"casimira","best":false},{"word":"defentsiba","best":false},{"word":"despedida","best":false},{"word":"diapositiba","best":false},{"word":"diatriba","best":false},{"word":"distira","best":false},{"word":"druida","best":false},{"word":"edelmira","best":false},{"word":"egunbira","best":false},{"word":"ehunkida","best":false},{"word":"ekida","best":false},{"word":"elizbira","best":false},{"word":"elvira","best":false},{"word":"emakida","best":false},{"word":"erakida","best":false},{"word":"errebalida","best":false},{"word":"errepira","best":false},{"word":"errogatiba","best":false},{"word":"erroiba","best":false},{"word":"errotatiba","best":false},{"word":"esklusiba","best":false},{"word":"eskriba","best":false},{"word":"eskuaira","best":false},{"word":"espermizida","best":false},{"word":"espira","best":false},{"word":"estiba","best":false},{"word":"estira","best":false},{"word":"euroliga","best":false},{"word":"exekutiba","best":false},{"word":"exkira","best":false},{"word":"eztabaida","best":false},{"word":"ferreira","best":false},{"word":"fida","best":false},{"word":"firfira","best":false},{"word":"florida","best":false},{"word":"fratrizida","best":false},{"word":"fungizida","best":false},{"word":"garriga","best":false},{"word":"genozida","best":false},{"word":"germizida","best":false},{"word":"giga","best":false},{"word":"guajira","best":false},{"word":"hejira","best":false},{"word":"herbizida","best":false},{"word":"hetaira","best":false},{"word":"hira","best":false},{"word":"ikusmira","best":false},{"word":"ingira","best":false},{"word":"ingurubira","best":false},{"word":"iniziatiba","best":false},{"word":"intsektizida","best":false},{"word":"ira","best":false},{"word":"irabazkida","best":false},{"word":"iritzira","best":false},{"word":"itsaingira","best":false},{"word":"itzulbira","best":false},{"word":"izkira","best":false},{"word":"jazira","best":false},{"word":"jira","best":false},{"word":"jirabira","best":false},{"word":"joaira","best":false},{"word":"kadira","best":false},{"word":"kalejira","best":false},{"word":"kaliga","best":false},{"word":"kantiga","best":false},{"word":"karotida","best":false},{"word":"kida","best":false},{"word":"koadriga","best":false},{"word":"koira","best":false},{"word":"kondaira","best":false},{"word":"konjuntiba","best":false},{"word":"kontrapartida","best":false},{"word":"kooperatiba","best":false},{"word":"korrida","best":false},{"word":"krida","best":false},{"word":"krisalida","best":false},{"word":"kromatida","best":false},{"word":"kurrida","best":false},{"word":"kurtsiba","best":false},{"word":"lagunkida","best":false},{"word":"laida","best":false},{"word":"laira","best":false},{"word":"lastaira","best":false},{"word":"liba","best":false},{"word":"lira","best":false},{"word":"lixiba","best":false},{"word":"lleida","best":false},{"word":"loira","best":false},{"word":"longida","best":false},{"word":"lurbira","best":false},{"word":"madeira","best":false},{"word":"maira","best":false},{"word":"marcaida","best":false},{"word":"markaida","best":false},{"word":"melida","best":false},{"word":"melira","best":false},{"word":"merida","best":false},{"word":"mintzaira","best":false},{"word":"mira","best":false},{"word":"moldizkira","best":false},{"word":"mugida","best":false},{"word":"nahikida","best":false},{"word":"narratiba","best":false},{"word":"neira","best":false},{"word":"nelida","best":false},{"word":"nereida","best":false},{"word":"ofentsiba","best":false},{"word":"ogiba","best":false},{"word":"oklusiba","best":false},{"word":"oliba","best":false},{"word":"palmira","best":false},{"word":"parotida","best":false},{"word":"parrizida","best":false},{"word":"perspektiba","best":false},{"word":"pestizida","best":false},{"word":"pilpira","best":false},{"word":"pira","best":false},{"word":"pirpira","best":false},{"word":"placida","best":false},{"word":"plagizida","best":false},{"word":"polaroida","best":false},{"word":"poliamida","best":false},{"word":"pozkida","best":false},{"word":"prospektiba","best":false},{"word":"raida","best":false},{"word":"riga","best":false},{"word":"satira","best":false},{"word":"sefira","best":false},{"word":"segida","best":false},{"word":"seira","best":false},{"word":"sinergida","best":false},{"word":"sokatira","best":false},{"word":"soliba","best":false},{"word":"somarriba","best":false},{"word":"suizida","best":false},{"word":"sulfamida","best":false},{"word":"taiga","best":false},{"word":"tirabira","best":false},{"word":"tiranizida","best":false},{"word":"triba","best":false},{"word":"trumonira","best":false},{"word":"txiba","best":false},{"word":"txillida","best":false},{"word":"txira","best":false},{"word":"urraida","best":false},{"word":"urrutira","best":false},{"word":"ustekida","best":false},{"word":"veiga","best":false},{"word":"xira","best":false},{"word":"zakaira","best":false},{"word":"zazpira","best":false},{"word":"zefeida","best":false},{"word":"ziba","best":false},{"word":"ziga","best":false},{"word":"zihiga","best":false},{"word":"zingira","best":false},{"word":"zira","best":false},{"word":"ziraida","best":false},{"word":"zirraida","best":false},{"word":"zortzira","best":false}],"ola":[{"word":"alkohola","best":true},{"word":"arbola","best":true},{"word":"arrabola","best":true},{"word":"axola","best":true},{"word":"behinola","best":true},{"word":"edonola","best":true},{"word":"eskola","best":true},{"word":"espainola","best":true},{"word":"futbola","best":true},{"word":"gola","best":true},{"word":"hola","best":true},{"word":"inola","best":true},{"word":"kirola","best":true},{"word":"kola","best":true},{"word":"loiola","best":true},{"word":"nola","best":true},{"word":"odola","best":true},{"word":"pistola","best":true},{"word":"rola","best":true},{"word":"aerosola","best":false},{"word":"agorrola","best":false},{"word":"agrikola","best":false},{"word":"aixkola","best":false},{"word":"aizkorola","best":false},{"word":"altzola","best":false},{"word":"alzola","best":false},{"word":"ametzola","best":false},{"word":"amnikola","best":false},{"word":"anfibola","best":false},{"word":"angola","best":false},{"word":"anisola","best":false},{"word":"ansola","best":false},{"word":"antsola","best":false},{"word":"antzerkiola","best":false},{"word":"antzuola","best":false},{"word":"aradola","best":false},{"word":"arbendola","best":false},{"word":"arborikola","best":false},{"word":"arenikola","best":false},{"word":"areola","best":false},{"word":"arexola","best":false},{"word":"argizaiola","best":false},{"word":"arkola","best":false},{"word":"arola","best":false},{"word":"arraiopola","best":false},{"word":"arrankola","best":false},{"word":"arranopola","best":false},{"word":"arrazola","best":false},{"word":"arriola","best":false},{"word":"arrola","best":false},{"word":"arteriola","best":false},{"word":"artohola","best":false},{"word":"artola","best":false},{"word":"atzoskola","best":false},{"word":"aureola","best":false},{"word":"aurtzola","best":false},{"word":"autoeskola","best":false},{"word":"autokontrola","best":false},{"word":"axkola","best":false},{"word":"azetola","best":false},{"word":"azpirola","best":false},{"word":"bahola","best":false},{"word":"bakuola","best":false},{"word":"banakola","best":false},{"word":"barkarola","best":false},{"word":"barola","best":false},{"word":"barriola","best":false},{"word":"beisbola","best":false},{"word":"bejondeiola","best":false},{"word":"bemola","best":false},{"word":"bentzola","best":false},{"word":"bildosola","best":false},{"word":"bioetanola","best":false},{"word":"biola","best":false},{"word":"bola","best":false},{"word":"boleibola","best":false},{"word":"brinkola","best":false},{"word":"brusola","best":false},{"word":"burdinola","best":false},{"word":"buruxola","best":false},{"word":"buztinola","best":false},{"word":"desaxola","best":false},{"word":"desertikola","best":false},{"word":"egarzola","best":false},{"word":"epistola","best":false},{"word":"erredola","best":false},{"word":"errezola","best":false},{"word":"erroseola","best":false},{"word":"errubeola","best":false},{"word":"eskaiola","best":false},{"word":"eskarola","best":false},{"word":"eskirola","best":false},{"word":"esnaola","best":false},{"word":"esterola","best":false},{"word":"estola","best":false},{"word":"etanola","best":false},{"word":"etxola","best":false},{"word":"ezaxola","best":false},{"word":"fabiola","best":false},{"word":"farola","best":false},{"word":"fenola","best":false},{"word":"finola","best":false},{"word":"formola","best":false},{"word":"fumarola","best":false},{"word":"gaindola","best":false},{"word":"gaintzola","best":false},{"word":"gandola","best":false},{"word":"gantzola","best":false},{"word":"garamola","best":false},{"word":"gargola","best":false},{"word":"gaueskola","best":false},{"word":"gaztanohola","best":false},{"word":"girola","best":false},{"word":"glizerola","best":false},{"word":"goardasola","best":false},{"word":"gojenola","best":false},{"word":"gondola","best":false},{"word":"gordexola","best":false},{"word":"gorrindola","best":false},{"word":"grisola","best":false},{"word":"guardasola","best":false},{"word":"guisasola","best":false},{"word":"gurtohola","best":false},{"word":"haizeola","best":false},{"word":"harriskola","best":false},{"word":"harrixkola","best":false},{"word":"harzola","best":false},{"word":"hesola","best":false},{"word":"hezbola","best":false},{"word":"hiperbola","best":false},{"word":"hispaniola","best":false},{"word":"humikola","best":false},{"word":"ibarrola","best":false},{"word":"iberdrola","best":false},{"word":"idazkola","best":false},{"word":"idola","best":false},{"word":"ikasola","best":false},{"word":"ikastola","best":false},{"word":"ikola","best":false},{"word":"ikuztohola","best":false},{"word":"iola","best":false},{"word":"ipurtohola","best":false},{"word":"iraola","best":false},{"word":"irarkola","best":false},{"word":"irazola","best":false},{"word":"irola","best":false},{"word":"itaskohola","best":false},{"word":"jandiola","best":false},{"word":"judeoespainola","best":false},{"word":"kaiola","best":false},{"word":"kakola","best":false},{"word":"karakola","best":false},{"word":"karanbola","best":false},{"word":"kartola","best":false},{"word":"kazola","best":false},{"word":"kizkola","best":false},{"word":"kolesterola","best":false},{"word":"kontrola","best":false},{"word":"kontsola","best":false},{"word":"korola","best":false},{"word":"korrostokola","best":false},{"word":"kreola","best":false},{"word":"landola","best":false},{"word":"leizaola","best":false},{"word":"lisola","best":false},{"word":"maiola","best":false},{"word":"makola","best":false},{"word":"manjola","best":false},{"word":"manterola","best":false},{"word":"margola","best":false},{"word":"markola","best":false},{"word":"marmola","best":false},{"word":"mendiola","best":false},{"word":"mentola","best":false},{"word":"merkuriola","best":false},{"word":"metanola","best":false},{"word":"mirandaola","best":false},{"word":"mobiola","best":false},{"word":"mogola","best":false},{"word":"mokola","best":false},{"word":"mola","best":false},{"word":"mongola","best":false},{"word":"muserola","best":false},{"word":"nehola","best":false},{"word":"odriozola","best":false},{"word":"ohola","best":false},{"word":"ola","best":false},{"word":"olaizola","best":false},{"word":"ontziola","best":false},{"word":"oskola","best":false},{"word":"pagola","best":false},{"word":"paola","best":false},{"word":"parabola","best":false},{"word":"parasola","best":false},{"word":"parazetamola","best":false},{"word":"patsola","best":false},{"word":"pergola","best":false},{"word":"pertola","best":false},{"word":"phagola","best":false},{"word":"pianola","best":false},{"word":"podzola","best":false},{"word":"polialkohola","best":false},{"word":"polifenola","best":false},{"word":"pratinkola","best":false},{"word":"propergola","best":false},{"word":"rezola","best":false},{"word":"samikola","best":false},{"word":"sarasola","best":false},{"word":"sasieskola","best":false},{"word":"saxikola","best":false},{"word":"segurola","best":false},{"word":"semola","best":false},{"word":"silbikola","best":false},{"word":"terrikola","best":false},{"word":"tirola","best":false},{"word":"tonbola","best":false},{"word":"tortola","best":false},{"word":"tranpola","best":false},{"word":"traola","best":false},{"word":"trokola","best":false},{"word":"tubikola","best":false},{"word":"txabola","best":false},{"word":"txapola","best":false},{"word":"txarola","best":false},{"word":"txintxola","best":false},{"word":"txirikola","best":false},{"word":"txiringola","best":false},{"word":"txirola","best":false},{"word":"txirrindola","best":false},{"word":"txirritola","best":false},{"word":"txokola","best":false},{"word":"txola","best":false},{"word":"uhola","best":false},{"word":"urbiola","best":false},{"word":"urkiola","best":false},{"word":"urola","best":false},{"word":"urrexola","best":false},{"word":"urritzola","best":false},{"word":"usatortola","best":false},{"word":"xingola","best":false},{"word":"xirimola","best":false},{"word":"xiristola","best":false},{"word":"zahamiola","best":false},{"word":"zangozola","best":false},{"word":"zarikola","best":false},{"word":"zeharrola","best":false},{"word":"zimartola","best":false},{"word":"zirimola","best":false},{"word":"ziriola","best":false},{"word":"zirola","best":false},{"word":"zirrindola","best":false},{"word":"zola","best":false},{"word":"zuhatzola","best":false},{"word":"zurginola","best":false},{"word":"zurriola","best":false},{"word":"zutola","best":false}],"sea":[{"word":"asea","best":true},{"word":"basea","best":true},{"word":"eklipsea","best":true},{"word":"fasea","best":true},{"word":"gosea","best":true},{"word":"klasea","best":true},{"word":"odisea","best":true},{"word":"anafasea","best":false},{"word":"atalasea","best":false},{"word":"aurrefasea","best":false},{"word":"azpifasea","best":false},{"word":"azpiklasea","best":false},{"word":"desfasea","best":false},{"word":"desglosea","best":false},{"word":"diesea","best":false},{"word":"elipsea","best":false},{"word":"enbasea","best":false},{"word":"esea","best":false},{"word":"frasea","best":false},{"word":"gainklasea","best":false},{"word":"infraklasea","best":false},{"word":"interfasea","best":false},{"word":"metafasea","best":false},{"word":"mihisea","best":false},{"word":"monofasea","best":false},{"word":"morsea","best":false},{"word":"moussea","best":false},{"word":"ongosea","best":false},{"word":"pasea","best":false},{"word":"polifasea","best":false},{"word":"posea","best":false},{"word":"profasea","best":false},{"word":"reprisea","best":false},{"word":"subklasea","best":false},{"word":"superklasea","best":false},{"word":"suspensea","best":false},{"word":"telofasea","best":false},{"word":"ukasea","best":false},{"word":"apendizea","best":true},{"word":"barizea","best":true},{"word":"haizea","best":true},{"word":"luzea","best":true},{"word":"oinazea","best":true},{"word":"abraizea","best":false},{"word":"andraizea","best":false},{"word":"arraizea","best":false},{"word":"askiluzea","best":false},{"word":"aurpegiluzea","best":false},{"word":"azpiindizea","best":false},{"word":"azpimatrizea","best":false},{"word":"azpindizea","best":false},{"word":"bakuntzea","best":false},{"word":"beheititzea","best":false},{"word":"belarriluzea","best":false},{"word":"buruntzatzea","best":false},{"word":"buztanluzea","best":false},{"word":"eskuluzea","best":false},{"word":"espadizea","best":false},{"word":"eztiorrazea","best":false},{"word":"gorraizea","best":false},{"word":"guraizea","best":false},{"word":"hankaluzea","best":false},{"word":"hauzea","best":false},{"word":"hegaluzea","best":false},{"word":"helizea","best":false},{"word":"herezea","best":false},{"word":"herratzea","best":false},{"word":"hezea","best":false},{"word":"ibarluzea","best":false},{"word":"indizea","best":false},{"word":"interfazea","best":false},{"word":"islatzea","best":false},{"word":"kanpaizea","best":false},{"word":"konplizea","best":false},{"word":"larruzea","best":false},{"word":"leizea","best":false},{"word":"lepoluzea","best":false},{"word":"matrazea","best":false},{"word":"matrizea","best":false},{"word":"mingainluzea","best":false},{"word":"mokoluzea","best":false},{"word":"mordazea","best":false},{"word":"musuluzea","best":false},{"word":"muturluzea","best":false},{"word":"nobizea","best":false},{"word":"onizea","best":false},{"word":"orrazea","best":false},{"word":"panazea","best":false},{"word":"pontifizea","best":false},{"word":"puntaluzea","best":false},{"word":"sardonizea","best":false},{"word":"silizea","best":false},{"word":"sudurluzea","best":false},{"word":"teodizea","best":false},{"word":"turbohelizea","best":false},{"word":"uzkurtzea","best":false},{"word":"zangaluzea","best":false},{"word":"zankaluzea","best":false},{"word":"zintzurluzea","best":false},{"word":"zundatzea","best":false},{"word":"hangoxea","best":true},{"word":"klixea","best":true},{"word":"pastixea","best":true},{"word":"amaxea","best":false},{"word":"bertakoxea","best":false},{"word":"bezalakoxea","best":false},{"word":"goikolexea","best":false},{"word":"halakoxea","best":false},{"word":"haxea","best":false},{"word":"hemengoxea","best":false},{"word":"honelakoxea","best":false},{"word":"horkoxea","best":false},{"word":"horrelakoxea","best":false},{"word":"malgaxea","best":false},{"word":"nolakoxea","best":false},{"word":"ordukoxea","best":false},{"word":"panaxea","best":false},{"word":"peluxea","best":false},{"word":"zahartuxea","best":false},{"word":"jertsea","best":true},{"word":"kortsea","best":true},{"word":"artatsea","best":false},{"word":"baltsea","best":false},{"word":"bedatsea","best":false},{"word":"hatsea","best":false},{"word":"aditzea","best":true},{"word":"aipatzea","best":true},{"word":"atzea","best":true},{"word":"dultzea","best":true},{"word":"eltzea","best":true},{"word":"gurutzea","best":true},{"word":"iltzea","best":true},{"word":"abordatzea","best":false},{"word":"adarjotzea","best":false},{"word":"adiskidetzea","best":false},{"word":"agertzea","best":false},{"word":"agintzea","best":false},{"word":"ahitzea","best":false},{"word":"ahoskatzea","best":false},{"word":"aireratzea","best":false},{"word":"aitortzea","best":false},{"word":"aitzinatzea","best":false},{"word":"akabatzea","best":false},{"word":"akitzea","best":false},{"word":"akomeatzea","best":false},{"word":"akuilatzea","best":false},{"word":"akusatzea","best":false},{"word":"alartzea","best":false},{"word":"aldatzea","best":false},{"word":"alderatzea","best":false},{"word":"alditxartzea","best":false},{"word":"aldizkatzea","best":false},{"word":"alertzea","best":false},{"word":"alfabetatzea","best":false},{"word":"aloitzea","best":false},{"word":"altxatzea","best":false},{"word":"altzea","best":false},{"word":"amaitzea","best":false},{"word":"antzaldatzea","best":false},{"word":"antzea","best":false},{"word":"apaltzea","best":false},{"word":"arakatzea","best":false},{"word":"arantzea","best":false},{"word":"arautzea","best":false},{"word":"ardantzea","best":false},{"word":"areagotzea","best":false},{"word":"arnasbotatzea","best":false},{"word":"arnegatzea","best":false},{"word":"arradatzea","best":false},{"word":"arraspatzea","best":false},{"word":"arroltzea","best":false},{"word":"arrosatzea","best":false},{"word":"artajorratzea","best":false},{"word":"artazuritzea","best":false},{"word":"arturratzea","best":false},{"word":"asaldatzea","best":false},{"word":"asetzea","best":false},{"word":"askatzea","best":false},{"word":"aspertzea","best":false},{"word":"asuntzea","best":false},{"word":"ataltzea","best":false},{"word":"atertzea","best":false},{"word":"aurreratzea","best":false},{"word":"azkentzea","best":false},{"word":"bahitzea","best":false},{"word":"bakartzea","best":false},{"word":"baketzea","best":false},{"word":"balantzea","best":false},{"word":"baliatzea","best":false},{"word":"baliokidetzea","best":false},{"word":"banakatzea","best":false},{"word":"banatzea","best":false},{"word":"baratzea","best":false},{"word":"barautzea","best":false},{"word":"barikurtzea","best":false},{"word":"barnatzea","best":false},{"word":"barneratzea","best":false},{"word":"barreiatzea","best":false},{"word":"basamortutzea","best":false},{"word":"bateratzea","best":false},{"word":"batetaratzea","best":false},{"word":"baztertzea","best":false},{"word":"bedeinkatzea","best":false},{"word":"begiratzea","best":false},{"word":"behatzea","best":false},{"word":"behaztopatzea","best":false},{"word":"belartzea","best":false},{"word":"belaunikatzea","best":false},{"word":"berandutzea","best":false},{"word":"berantzea","best":false},{"word":"berdintzea","best":false},{"word":"bereganatzea","best":false},{"word":"berrabiatzea","best":false},{"word":"berragertzea","best":false},{"word":"berraragiztatzea","best":false},{"word":"berraztertzea","best":false},{"word":"berregokitzea","best":false},{"word":"berreuskalduntzea","best":false},{"word":"berrezartzea","best":false},{"word":"berrindustrialtzea","best":false},{"word":"berriztatzea","best":false},{"word":"bertakotzea","best":false},{"word":"bertzea","best":false},{"word":"bestelakatzea","best":false},{"word":"betetzea","best":false},{"word":"betikartzea","best":false},{"word":"bidagurutzea","best":false},{"word":"bidatzea","best":false},{"word":"bidebanatzea","best":false},{"word":"bidegurutzea","best":false},{"word":"bihurtzea","best":false},{"word":"biltzea","best":false},{"word":"biratzea","best":false},{"word":"birraldatzea","best":false},{"word":"birsartzea","best":false},{"word":"birziklatzea","best":false},{"word":"bizitzea","best":false},{"word":"brontzea","best":false},{"word":"burdinkurutzea","best":false},{"word":"burutzea","best":false},{"word":"dastatzea","best":false},{"word":"dendatzea","best":false},{"word":"derrapatzea","best":false},{"word":"desagertzea","best":false},{"word":"deseuskalduntzea","best":false},{"word":"destokitzea","best":false},{"word":"deuseztatzea","best":false},{"word":"drainatzea","best":false},{"word":"ebakitzea","best":false},{"word":"egokitzea","best":false},{"word":"eguneratzea","best":false},{"word":"ehortzea","best":false},{"word":"elikatzea","best":false},{"word":"elkarbanatzea","best":false},{"word":"elkartzea","best":false},{"word":"elurtzea","best":false},{"word":"endakatzea","best":false},{"word":"eneatzea","best":false},{"word":"eraberritzea","best":false},{"word":"eraldatzea","best":false},{"word":"erbesteratzea","best":false},{"word":"erditzea","best":false},{"word":"eretzea","best":false},{"word":"erortzea","best":false},{"word":"errekeritzea","best":false},{"word":"erreparatzea","best":false},{"word":"erretzea","best":false},{"word":"erromantzea","best":false},{"word":"eskolaratzea","best":false},{"word":"eskualdatzea","best":false},{"word":"eskualdekatzea","best":false},{"word":"eskuantzea","best":false},{"word":"eskumeneratzea","best":false},{"word":"eskuratzea","best":false},{"word":"eskusartzea","best":false},{"word":"eskuztatzea","best":false},{"word":"estaltzea","best":false},{"word":"etortzea","best":false},{"word":"etzea","best":false},{"word":"eultzea","best":false},{"word":"euntzea","best":false},{"word":"euskalduntzea","best":false},{"word":"ezinbertzea","best":false},{"word":"ezkontzea","best":false},{"word":"ezkutatzea","best":false},{"word":"fluidizatzea","best":false},{"word":"fokatzea","best":false},{"word":"fotomuntatzea","best":false},{"word":"fusilatzea","best":false},{"word":"gaitasungabetzea","best":false},{"word":"gaizkatzea","best":false},{"word":"galjotzea","best":false},{"word":"galtzadatzea","best":false},{"word":"galtzea","best":false},{"word":"garestitzea","best":false},{"word":"garramatzea","best":false},{"word":"gaurkotzea","best":false},{"word":"gerezitzea","best":false},{"word":"gerruntzea","best":false},{"word":"gidatzea","best":false},{"word":"girotzea","best":false},{"word":"gizarteratzea","best":false},{"word":"goatzea","best":false},{"word":"gogolantzea","best":false},{"word":"haizeztatzea","best":false},{"word":"handitzea","best":false},{"word":"haragitzea","best":false},{"word":"hartzea","best":false},{"word":"hauspeatzea","best":false},{"word":"hautatzea","best":false},{"word":"hedatzea","best":false},{"word":"hertzea","best":false},{"word":"hiltzea","best":false},{"word":"hobetzea","best":false},{"word":"ibiltzea","best":false},{"word":"ibintzea","best":false},{"word":"igotzea","best":false},{"word":"ikertzea","best":false},{"word":"ilkitzea","best":false},{"word":"iluntzea","best":false},{"word":"imantzea","best":false},{"word":"indargabetzea","best":false},{"word":"indartzea","best":false},{"word":"inposatzea","best":false},{"word":"inprimatzea","best":false},{"word":"intxaurtzea","best":false},{"word":"irakurtzea","best":false},{"word":"iratzea","best":false},{"word":"iraultzea","best":false},{"word":"irradatzea","best":false},{"word":"isuraldatzea","best":false},{"word":"isurtzea","best":false},{"word":"ituntzea","best":false},{"word":"itxuraldatzea","best":false},{"word":"itzea","best":false},{"word":"itzultzea","best":false},{"word":"izendatzea","best":false},{"word":"jaiotzea","best":false},{"word":"jalgitzea","best":false},{"word":"jariatzea","best":false},{"word":"jasotzea","best":false},{"word":"jaulkitzea","best":false},{"word":"jaunartzea","best":false},{"word":"jeloskortzea","best":false},{"word":"jostiltzea","best":false},{"word":"jotzea","best":false},{"word":"kaltzea","best":false},{"word":"karenatzea","best":false},{"word":"karramarroztatzea","best":false},{"word":"kintzea","best":false},{"word":"konpartitzea","best":false},{"word":"konprimitzea","best":false},{"word":"kopiatzea","best":false},{"word":"koroatzea","best":false},{"word":"krutzea","best":false},{"word":"kuntzea","best":false},{"word":"kutsatzea","best":false},{"word":"lantzea","best":false},{"word":"lekualdatzea","best":false},{"word":"lekutzea","best":false},{"word":"lixibatzea","best":false},{"word":"loratzea","best":false},{"word":"lurreratzea","best":false},{"word":"makoiltzea","best":false},{"word":"mantentzea","best":false},{"word":"marugatzea","best":false},{"word":"meatzea","best":false},{"word":"obeditzea","best":false},{"word":"odoleztatzea","best":false},{"word":"odolustutzea","best":false},{"word":"ogitzea","best":false},{"word":"ohantzea","best":false},{"word":"ohatzea","best":false},{"word":"olibatzea","best":false},{"word":"onbihurtzea","best":false},{"word":"ontziratzea","best":false},{"word":"oratzea","best":false},{"word":"otatzea","best":false},{"word":"oxigenatzea","best":false},{"word":"pentzea","best":false},{"word":"personatzea","best":false},{"word":"plakatzea","best":false},{"word":"porturatzea","best":false},{"word":"posizionatzea","best":false},{"word":"printzea","best":false},{"word":"probenatzea","best":false},{"word":"sagaratzea","best":false},{"word":"sagartzea","best":false},{"word":"sartzea","best":false},{"word":"sistematizatzea","best":false},{"word":"sobietartzea","best":false},{"word":"soiltzea","best":false},{"word":"sortzea","best":false},{"word":"sudurkaritzea","best":false},{"word":"suntsitzea","best":false},{"word":"tartekatzea","best":false},{"word":"trantzea","best":false},{"word":"trikatzea","best":false},{"word":"trokatzea","best":false},{"word":"trontzea","best":false},{"word":"trukatzea","best":false},{"word":"txertatzea","best":false},{"word":"txinpantzea","best":false},{"word":"udaretzea","best":false},{"word":"ugaltzea","best":false},{"word":"ugaritzea","best":false},{"word":"uhertzea","best":false},{"word":"ukatzea","best":false},{"word":"ukitzea","best":false},{"word":"umegaltzea","best":false},{"word":"ureztatzea","best":false},{"word":"urkatzea","best":false},{"word":"urratzea","best":false},{"word":"urrikaltzea","best":false},{"word":"urrikitzea","best":false},{"word":"urrindatzea","best":false},{"word":"urrineztatzea","best":false},{"word":"urtebetetzea","best":false},{"word":"urtzea","best":false},{"word":"usnatzea","best":false},{"word":"usteltzea","best":false},{"word":"ustiatzea","best":false},{"word":"xaflatzea","best":false},{"word":"xahutzea","best":false},{"word":"xehatzea","best":false},{"word":"xurgatzea","best":false},{"word":"zabaltzea","best":false},{"word":"zaharberritzea","best":false},{"word":"zahartzea","best":false},{"word":"zaintzea","best":false},{"word":"zamatzea","best":false},{"word":"zatibanatzea","best":false},{"word":"zatikatzea","best":false},{"word":"zatitzea","best":false},{"word":"zauritzea","best":false},{"word":"zenbatekotzea","best":false},{"word":"zenbatzea","best":false},{"word":"zentralizatzea","best":false},{"word":"zentzatzea","best":false},{"word":"zeruratzea","best":false},{"word":"zuhaintzea","best":false},{"word":"zulatzea","best":false},{"word":"zuritzea","best":false},{"word":"zuzentzea","best":false},{"word":"aratxea","best":true},{"word":"etxea","best":true},{"word":"fetitxea","best":true},{"word":"kortxea","best":true},{"word":"kotxea","best":true},{"word":"partxea","best":true},{"word":"abeletxea","best":false},{"word":"agirretxea","best":false},{"word":"aitzintxea","best":false},{"word":"akeitetxea","best":false},{"word":"aldaetxea","best":false},{"word":"aldetxea","best":false},{"word":"amaetxea","best":false},{"word":"apaizetxea","best":false},{"word":"apatxea","best":false},{"word":"ardanetxea","best":false},{"word":"argitaletxea","best":false},{"word":"artatxea","best":false},{"word":"artiletxea","best":false},{"word":"aterpetxea","best":false},{"word":"aurrekoetxea","best":false},{"word":"auzetxea","best":false},{"word":"azabatxea","best":false},{"word":"bahitetxea","best":false},{"word":"bainuetxea","best":false},{"word":"banketxea","best":false},{"word":"barrenetxea","best":false},{"word":"basetxea","best":false},{"word":"basterretxea","best":false},{"word":"batzarretxea","best":false},{"word":"bazterretxea","best":false},{"word":"beaskoetxea","best":false},{"word":"bengoetxea","best":false},{"word":"bikarioetxea","best":false},{"word":"bilkuretxea","best":false},{"word":"bizitetxea","best":false},{"word":"derbitxea","best":false},{"word":"diruetxea","best":false},{"word":"diskoetxea","best":false},{"word":"dorretxea","best":false},{"word":"ehorztetxea","best":false},{"word":"ekintzetxea","best":false},{"word":"erietxea","best":false},{"word":"erletxea","best":false},{"word":"eroetxea","best":false},{"word":"erostetxea","best":false},{"word":"errematxea","best":false},{"word":"eskabetxea","best":false},{"word":"espetxea","best":false},{"word":"gaixoetxea","best":false},{"word":"garaikoetxea","best":false},{"word":"garkotxea","best":false},{"word":"gaztetxea","best":false},{"word":"girlatxea","best":false},{"word":"goienetxea","best":false},{"word":"goikoetxea","best":false},{"word":"guantxea","best":false},{"word":"gudaletxea","best":false},{"word":"gurtetxea","best":false},{"word":"hatxea","best":false},{"word":"haztetxea","best":false},{"word":"ihetxea","best":false},{"word":"ikastetxea","best":false},{"word":"indarretxea","best":false},{"word":"irakastetxea","best":false},{"word":"jaiotetxea","best":false},{"word":"janztetxea","best":false},{"word":"jatetxea","best":false},{"word":"jauretxea","best":false},{"word":"jentiletxea","best":false},{"word":"jokaetxea","best":false},{"word":"juntetxea","best":false},{"word":"kafeetxea","best":false},{"word":"kalitxea","best":false},{"word":"kanputxea","best":false},{"word":"komantxea","best":false},{"word":"kontsuletxea","best":false},{"word":"landerretxea","best":false},{"word":"landetxea","best":false},{"word":"lekaidetxea","best":false},{"word":"lekaimetxea","best":false},{"word":"lekaretxea","best":false},{"word":"malgatxea","best":false},{"word":"mapatxea","best":false},{"word":"maputxea","best":false},{"word":"mesanotxea","best":false},{"word":"oinetxea","best":false},{"word":"ormaetxea","best":false},{"word":"pelutxea","best":false},{"word":"perletxea","best":false},{"word":"pontxea","best":false},{"word":"postetxea","best":false},{"word":"putetxea","best":false},{"word":"saletxea","best":false},{"word":"sardetxea","best":false},{"word":"seroretxea","best":false},{"word":"sorostetxea","best":false},{"word":"sortetxea","best":false},{"word":"suetxea","best":false},{"word":"telletxea","best":false},{"word":"txetxetxea","best":false},{"word":"udaletxea","best":false},{"word":"urrutikoetxea","best":false},{"word":"uztarretxea","best":false},{"word":"zoroetxea","best":false}],"era":[{"word":"arabera","best":true},{"word":"arreba","best":true},{"word":"atera","best":true},{"word":"atmosfera","best":true},{"word":"atzera","best":true},{"word":"aukera","best":true},{"word":"batera","best":true},{"word":"bezpera","best":true},{"word":"bisera","best":true},{"word":"esatera","best":true},{"word":"estratega","best":true},{"word":"galera","best":true},{"word":"greba","best":true},{"word":"jokaera","best":true},{"word":"minbera","best":true},{"word":"ostera","best":true},{"word":"portaera","best":true},{"word":"rueda","best":true},{"word":"saiakera","best":true},{"word":"sarrera","best":true},{"word":"txera","best":true},{"word":"zera","best":true},{"word":"abelera","best":false},{"word":"adakera","best":false},{"word":"aditzera","best":false},{"word":"ageda","best":false},{"word":"agerkera","best":false},{"word":"agerrera","best":false},{"word":"agindupera","best":false},{"word":"aguilera","best":false},{"word":"ahalera","best":false},{"word":"ahoskera","best":false},{"word":"aipaera","best":false},{"word":"aitaginarreba","best":false},{"word":"aitorrera","best":false},{"word":"aitzinera","best":false},{"word":"akitaniera","best":false},{"word":"aldabera","best":false},{"word":"alsaziera","best":false},{"word":"altxaera","best":false},{"word":"ameba","best":false},{"word":"amesbera","best":false},{"word":"amilera","best":false},{"word":"antikolera","best":false},{"word":"antxera","best":false},{"word":"antzinaera","best":false},{"word":"apodera","best":false},{"word":"arabiera","best":false},{"word":"arameera","best":false},{"word":"arkubarnera","best":false},{"word":"arpillera","best":false},{"word":"arrega","best":false},{"word":"artzeniega","best":false},{"word":"artziniega","best":false},{"word":"asiriera","best":false},{"word":"assamera","best":false},{"word":"astebukaera","best":false},{"word":"aurbera","best":false},{"word":"aurrehititera","best":false},{"word":"aurrejoera","best":false},{"word":"avestera","best":false},{"word":"azalera","best":false},{"word":"azpisarrera","best":false},{"word":"bainera","best":false},{"word":"bandera","best":false},{"word":"barrera","best":false},{"word":"begitanduera","best":false},{"word":"beldurbera","best":false},{"word":"berbaera","best":false},{"word":"berripapera","best":false},{"word":"betiera","best":false},{"word":"bideokamera","best":false},{"word":"biera","best":false},{"word":"bobeda","best":false},{"word":"bolandera","best":false},{"word":"boveda","best":false},{"word":"bretoiera","best":false},{"word":"bulgariera","best":false},{"word":"buruera","best":false},{"word":"carrera","best":false},{"word":"daniera","best":false},{"word":"dariera","best":false},{"word":"deiera","best":false},{"word":"desplazera","best":false},{"word":"divehiera","best":false},{"word":"dohatsuera","best":false},{"word":"donabera","best":false},{"word":"drosera","best":false},{"word":"ebraiera","best":false},{"word":"ederbera","best":false},{"word":"ega","best":false},{"word":"egarbera","best":false},{"word":"egikera","best":false},{"word":"egiptera","best":false},{"word":"egiptoera","best":false},{"word":"egoera","best":false},{"word":"egokiera","best":false},{"word":"egutera","best":false},{"word":"eihera","best":false},{"word":"entzera","best":false},{"word":"era","best":false},{"word":"eraginbera","best":false},{"word":"erbera","best":false},{"word":"eribera","best":false},{"word":"erronkariera","best":false},{"word":"errusiera","best":false},{"word":"esaera","best":false},{"word":"eskortzonera","best":false},{"word":"eslaviera","best":false},{"word":"eslovakiera","best":false},{"word":"esnebera","best":false},{"word":"etruriera","best":false},{"word":"exosfera","best":false},{"word":"ezarrera","best":false},{"word":"ezkonarreba","best":false},{"word":"faltrikera","best":false},{"word":"fangera","best":false},{"word":"feniziera","best":false},{"word":"filoxera","best":false},{"word":"finlandiera","best":false},{"word":"fregadera","best":false},{"word":"frera","best":false},{"word":"fuera","best":false},{"word":"gaelera","best":false},{"word":"gaeliera","best":false},{"word":"gainbehera","best":false},{"word":"galiziera","best":false},{"word":"ganbera","best":false},{"word":"garaiera","best":false},{"word":"garrazpera","best":false},{"word":"gaztanbera","best":false},{"word":"gelbera","best":false},{"word":"geztera","best":false},{"word":"gibelera","best":false},{"word":"gilbera","best":false},{"word":"gipuzkera","best":false},{"word":"gleba","best":false},{"word":"gogaiera","best":false},{"word":"goibehera","best":false},{"word":"gorpuzkera","best":false},{"word":"gujaratera","best":false},{"word":"gujeratiera","best":false},{"word":"gupera","best":false},{"word":"gurkera","best":false},{"word":"harrera","best":false},{"word":"hasbehera","best":false},{"word":"hautaera","best":false},{"word":"haziera","best":false},{"word":"hebreera","best":false},{"word":"hega","best":false},{"word":"hera","best":false},{"word":"higikera","best":false},{"word":"ibilera","best":false},{"word":"igboera","best":false},{"word":"ilunkera","best":false},{"word":"intziera","best":false},{"word":"irekiera","best":false},{"word":"irlandera","best":false},{"word":"italiera","best":false},{"word":"izubera","best":false},{"word":"jaiera","best":false},{"word":"jaioera","best":false},{"word":"jaiotizkera","best":false},{"word":"jaitsiera","best":false},{"word":"jakera","best":false},{"word":"jalkiera","best":false},{"word":"jarduera","best":false},{"word":"jarkiera","best":false},{"word":"jasanbera","best":false},{"word":"jesarrera","best":false},{"word":"jorubera","best":false},{"word":"joskera","best":false},{"word":"kamera","best":false},{"word":"kantadera","best":false},{"word":"kantinera","best":false},{"word":"kapera","best":false},{"word":"karnazera","best":false},{"word":"karrera","best":false},{"word":"katadera","best":false},{"word":"kautera","best":false},{"word":"khemerera","best":false},{"word":"kikera","best":false},{"word":"kikimera","best":false},{"word":"kilikabera","best":false},{"word":"konkanera","best":false},{"word":"kontrajarrera","best":false},{"word":"kroaziera","best":false},{"word":"kromosfera","best":false},{"word":"krosmofera","best":false},{"word":"kurdera","best":false},{"word":"kurduera","best":false},{"word":"labandera","best":false},{"word":"laburrera","best":false},{"word":"laosiera","best":false},{"word":"laponiera","best":false},{"word":"lastamarrega","best":false},{"word":"lega","best":false},{"word":"lekeda","best":false},{"word":"lepeda","best":false},{"word":"lera","best":false},{"word":"lidiera","best":false},{"word":"likiera","best":false},{"word":"linabera","best":false},{"word":"litosfera","best":false},{"word":"lodiera","best":false},{"word":"logopeda","best":false},{"word":"lumera","best":false},{"word":"luxenburgera","best":false},{"word":"luzera","best":false},{"word":"makera","best":false},{"word":"makurrera","best":false},{"word":"malaysiera","best":false},{"word":"mandarinera","best":false},{"word":"manipurera","best":false},{"word":"manjatera","best":false},{"word":"mantanera","best":false},{"word":"manxera","best":false},{"word":"mareabehera","best":false},{"word":"marshallera","best":false},{"word":"matadera","best":false},{"word":"maukera","best":false},{"word":"mera","best":false},{"word":"misera","best":false},{"word":"moldaera","best":false},{"word":"mosquera","best":false},{"word":"mukadera","best":false},{"word":"musadera","best":false},{"word":"nafarrera","best":false},{"word":"nahiera","best":false},{"word":"nahikera","best":false},{"word":"nardabera","best":false},{"word":"nebreda","best":false},{"word":"nederlandera","best":false},{"word":"neurkera","best":false},{"word":"neurrera","best":false},{"word":"neurtizkera","best":false},{"word":"nonbaitera","best":false},{"word":"oharkera","best":false},{"word":"ojeda","best":false},{"word":"oosfera","best":false},{"word":"opera","best":false},{"word":"ortopeda","best":false},{"word":"ostalera","best":false},{"word":"otasega","best":false},{"word":"padera","best":false},{"word":"palauera","best":false},{"word":"paliera","best":false},{"word":"palmera","best":false},{"word":"pasaera","best":false},{"word":"pasiera","best":false},{"word":"pehleviera","best":false},{"word":"piadera","best":false},{"word":"piedramillera","best":false},{"word":"piztuera","best":false},{"word":"polinesiera","best":false},{"word":"potera","best":false},{"word":"pozadera","best":false},{"word":"proventzalera","best":false},{"word":"punjabiera","best":false},{"word":"rivera","best":false},{"word":"saihera","best":false},{"word":"sakonera","best":false},{"word":"salera","best":false},{"word":"samplera","best":false},{"word":"sartzaiera","best":false},{"word":"satandera","best":false},{"word":"sausera","best":false},{"word":"sega","best":false},{"word":"senikera","best":false},{"word":"sentibera","best":false},{"word":"sentiera","best":false},{"word":"sobera","best":false},{"word":"soinbera","best":false},{"word":"somaliera","best":false},{"word":"sorabiera","best":false},{"word":"sorrera","best":false},{"word":"speeda","best":false},{"word":"subera","best":false},{"word":"suediera","best":false},{"word":"suharbera","best":false},{"word":"sumera","best":false},{"word":"suomiera","best":false},{"word":"sustraikera","best":false},{"word":"taxuera","best":false},{"word":"teluguera","best":false},{"word":"thaiera","best":false},{"word":"tokariera","best":false},{"word":"tonuera","best":false},{"word":"troposfera","best":false},{"word":"trukaera","best":false},{"word":"tsongera","best":false},{"word":"tuarega","best":false},{"word":"txikadera","best":false},{"word":"tximuera","best":false},{"word":"txinbera","best":false},{"word":"txinera","best":false},{"word":"txistera","best":false},{"word":"txopera","best":false},{"word":"ukaera","best":false},{"word":"ulerkera","best":false},{"word":"urartuera","best":false},{"word":"urbera","best":false},{"word":"uzbekera","best":false},{"word":"vega","best":false},{"word":"veneziera","best":false},{"word":"vera","best":false},{"word":"vietnamera","best":false},{"word":"waloiera","best":false},{"word":"xarnafera","best":false},{"word":"xedera","best":false},{"word":"xera","best":false},{"word":"xiberera","best":false},{"word":"yoseba","best":false},{"word":"zabalera","best":false},{"word":"zaraitzuera","best":false},{"word":"zeltera","best":false},{"word":"zierrapoilera","best":false},{"word":"zogiera","best":false},{"word":"zozkera","best":false},{"word":"zuluera","best":false}],"asi":[{"word":"afasi","best":false},{"word":"akariasi","best":false},{"word":"antonomasi","best":false},{"word":"aplasi","best":false},{"word":"apostasi","best":false},{"word":"basi","best":false},{"word":"demasi","best":false},{"word":"desmasi","best":false},{"word":"disfasi","best":false},{"word":"displasi","best":false},{"word":"elefantiasi","best":false},{"word":"enfasi","best":true},{"word":"erasi","best":false},{"word":"eskasi","best":false},{"word":"eutanasi","best":false},{"word":"ezikasi","best":false},{"word":"fantasi","best":false},{"word":"garrasi","best":true},{"word":"gimnasi","best":true},{"word":"hemostasi","best":false},{"word":"hipostasi","best":false},{"word":"homeostasi","best":false},{"word":"idiosinkrasi","best":false},{"word":"ikasi","best":true},{"word":"ikonoklasi","best":false},{"word":"immunoeskasi","best":false},{"word":"isasi","best":false},{"word":"isostasi","best":false},{"word":"kandidiasi","best":false},{"word":"kasi","best":true},{"word":"kolelitiasi","best":false},{"word":"labasi","best":false},{"word":"lerronahasi","best":false},{"word":"litiasi","best":false},{"word":"malagasi","best":false},{"word":"masi","best":false},{"word":"metastasi","best":false},{"word":"midriasi","best":false},{"word":"nabasi","best":false},{"word":"nahasi","best":true},{"word":"neoplasi","best":false},{"word":"oasi","best":true},{"word":"parafrasi","best":false},{"word":"perifrasi","best":false},{"word":"pitiriasi","best":false},{"word":"protasi","best":false},{"word":"psoriasi","best":false},{"word":"sasi","best":true},{"word":"hasi","best":true},{"word":"adierazi","best":true},{"word":"akazi","best":false},{"word":"akrazi","best":false},{"word":"akrobazi","best":true},{"word":"aristokrazi","best":false},{"word":"arrankazi","best":false},{"word":"artazi","best":false},{"word":"askazi","best":false},{"word":"askenazi","best":false},{"word":"astrokrazi","best":false},{"word":"autokrazi","best":false},{"word":"bazi","best":false},{"word":"belahazi","best":false},{"word":"bonbazi","best":false},{"word":"burokrazi","best":false},{"word":"demokrazi","best":false},{"word":"desgrazi","best":false},{"word":"diplomazi","best":false},{"word":"efikazi","best":false},{"word":"falazi","best":false},{"word":"falokrazi","best":false},{"word":"farmazi","best":false},{"word":"fisiokrazi","best":false},{"word":"galazi","best":false},{"word":"garazi","best":false},{"word":"gazi","best":false},{"word":"gerontokrazi","best":false},{"word":"ginekokrazi","best":false},{"word":"grazi","best":false},{"word":"hazi","best":true},{"word":"inatazi","best":false},{"word":"inefikazi","best":false},{"word":"irabazi","best":false},{"word":"kakazi","best":false},{"word":"lekazi","best":false},{"word":"linazi","best":false},{"word":"mazi","best":false},{"word":"mesokrazi","best":false},{"word":"nazi","best":true},{"word":"neonazi","best":false},{"word":"orrazi","best":true},{"word":"osteomalazi","best":false},{"word":"pagazi","best":false},{"word":"pazi","best":false},{"word":"pinazi","best":false},{"word":"plutokrazi","best":false},{"word":"sasiakazi","best":false},{"word":"sozialdemokrazi","best":false},{"word":"teknokrazi","best":false},{"word":"teokrazi","best":false},{"word":"umazi","best":false},{"word":"arazi","best":true},{"word":"iragazi","best":true},{"word":"anafilaxi","best":false},{"word":"apraxi","best":false},{"word":"ataxi","best":false},{"word":"galaxi","best":false},{"word":"morfosintaxi","best":false},{"word":"paralaxi","best":false},{"word":"parataxi","best":false},{"word":"praxi","best":true},{"word":"profilaxi","best":false},{"word":"sintaxi","best":false},{"word":"taxi","best":true}],"abe":[{"word":"abe","best":false},{"word":"aberrigabe","best":false},{"word":"abildade","best":true},{"word":"abilidade","best":false},{"word":"adargabe","best":false},{"word":"adeigabe","best":false},{"word":"adigabe","best":false},{"word":"adimengabe","best":false},{"word":"adingabe","best":false},{"word":"adoregabe","best":false},{"word":"agabe","best":false},{"word":"ahalgabe","best":false},{"word":"ahalkegabe","best":false},{"word":"ahoskabe","best":false},{"word":"ahuldade","best":false},{"word":"akasgabe","best":false},{"word":"akatsgabe","best":false},{"word":"alboragabe","best":false},{"word":"aldare","best":false},{"word":"alfabetatugabe","best":false},{"word":"almogavare","best":false},{"word":"almohade","best":false},{"word":"amagabe","best":false},{"word":"amaigabe","best":false},{"word":"amarrugabe","best":false},{"word":"andare","best":false},{"word":"andrade","best":false},{"word":"antsikabe","best":false},{"word":"antzekabe","best":false},{"word":"arantzagabe","best":false},{"word":"arartegabe","best":false},{"word":"arduragabe","best":false},{"word":"are","best":false},{"word":"argitaragabe","best":false},{"word":"arkitrabe","best":false},{"word":"armagabe","best":false},{"word":"arrazoigabe","best":false},{"word":"arroiabe","best":false},{"word":"artagabe","best":false},{"word":"artare","best":false},{"word":"asegabe","best":false},{"word":"askigabe","best":false},{"word":"atergabe","best":false},{"word":"atsekabe","best":false},{"word":"aurikulare","best":false},{"word":"autoklabe","best":false},{"word":"axolagabe","best":false},{"word":"azare","best":false},{"word":"azentugabe","best":false},{"word":"azkengabe","best":false},{"word":"babesgabe","best":false},{"word":"bakardade","best":true},{"word":"baldintzatugabe","best":false},{"word":"baliogabe","best":false},{"word":"bare","best":true},{"word":"baresare","best":false},{"word":"basabe","best":false},{"word":"basalandare","best":false},{"word":"baztergabe","best":false},{"word":"behargabe","best":false},{"word":"bekatugabe","best":false},{"word":"beldurgabe","best":false},{"word":"bereizigabe","best":false},{"word":"berjabe","best":false},{"word":"bernabe","best":false},{"word":"besare","best":false},{"word":"betsare","best":false},{"word":"bidegabe","best":false},{"word":"bihozgabe","best":false},{"word":"bilogabe","best":false},{"word":"birjindade","best":false},{"word":"bizargabe","best":false},{"word":"bizigabe","best":false},{"word":"bukagabe","best":false},{"word":"bukatugabe","best":false},{"word":"burdinsare","best":false},{"word":"burugabe","best":false},{"word":"burutugabe","best":false},{"word":"collage","best":false},{"word":"damugabe","best":false},{"word":"denboragabe","best":false},{"word":"dirugabe","best":false},{"word":"dispare","best":false},{"word":"ditxagabe","best":false},{"word":"dohakabe","best":false},{"word":"dolare","best":false},{"word":"dudagabe","best":false},{"word":"duingabe","best":false},{"word":"edabe","best":false},{"word":"edade","best":true},{"word":"eitegabe","best":false},{"word":"elizgabe","best":false},{"word":"emaztegabe","best":false},{"word":"enbrage","best":false},{"word":"enklabe","best":false},{"word":"entzungabe","best":false},{"word":"eragabe","best":false},{"word":"erdaingabe","best":false},{"word":"erdigabe","best":false},{"word":"erlijiogabe","best":false},{"word":"ermandade","best":false},{"word":"erraigabe","best":false},{"word":"errespetugabe","best":false},{"word":"errugabe","best":false},{"word":"errukigabe","best":false},{"word":"eskasgabe","best":false},{"word":"eskergabe","best":false},{"word":"eskolagabe","best":false},{"word":"eskuare","best":false},{"word":"eskuzare","best":false},{"word":"esperantzagabe","best":false},{"word":"estakurugabe","best":false},{"word":"estrabe","best":false},{"word":"etengabe","best":false},{"word":"etxabe","best":false},{"word":"etxegabe","best":false},{"word":"etxepare","best":false},{"word":"ezade","best":false},{"word":"ezagueragabe","best":false},{"word":"ezagungabe","best":false},{"word":"ezagutugabe","best":false},{"word":"ezkongabe","best":false},{"word":"fanfare","best":false},{"word":"fedegabe","best":false},{"word":"fingabe","best":false},{"word":"formalidade","best":false},{"word":"fruitugabe","best":false},{"word":"funsgabe","best":false},{"word":"gabe","best":true},{"word":"gaitasungabe","best":false},{"word":"gaizgabe","best":false},{"word":"ganoragabe","best":false},{"word":"gatzgabe","best":false},{"word":"gisulabe","best":false},{"word":"gizagabe","best":false},{"word":"gogogabe","best":false},{"word":"goihabe","best":false},{"word":"gomagabe","best":false},{"word":"gorpuzgabe","best":false},{"word":"gozogabe","best":false},{"word":"grabe","best":true},{"word":"grinagabe","best":false},{"word":"gupidagabe","best":false},{"word":"gustugabe","best":false},{"word":"harare","best":false},{"word":"hastegabe","best":false},{"word":"hegogabe","best":false},{"word":"helbideragabe","best":false},{"word":"helgabe","best":false},{"word":"herrigabe","best":false},{"word":"hezigabe","best":false},{"word":"hezurgabe","best":false},{"word":"hipotekagabe","best":false},{"word":"hobengabe","best":false},{"word":"hobiragabe","best":false},{"word":"hondargabe","best":false},{"word":"hondogabe","best":false},{"word":"horzgabe","best":false},{"word":"hostogabe","best":false},{"word":"igurikigabe","best":false},{"word":"ikasgabe","best":false},{"word":"ilabe","best":false},{"word":"ilegabe","best":false},{"word":"indargabe","best":false},{"word":"irendugabe","best":false},{"word":"isatsgabe","best":false},{"word":"jabe","best":true},{"word":"jade","best":false},{"word":"jaikigabe","best":false},{"word":"jakingabe","best":false},{"word":"jare","best":false},{"word":"jatabe","best":false},{"word":"joare","best":false},{"word":"jokatugabe","best":false},{"word":"juglare","best":false},{"word":"kabugabe","best":false},{"word":"kafeinagabe","best":false},{"word":"kalamidade","best":false},{"word":"kaltegabe","best":false},{"word":"kapare","best":false},{"word":"kare","best":false},{"word":"kaudimengabe","best":false},{"word":"klabe","best":true},{"word":"koilare","best":false},{"word":"koloregabe","best":false},{"word":"kondiziogabe","best":false},{"word":"konformidade","best":false},{"word":"konklabe","best":false},{"word":"kontragoihabe","best":false},{"word":"kontrasare","best":false},{"word":"kontugabe","best":false},{"word":"kopenhage","best":false},{"word":"koskagabe","best":false},{"word":"kristandade","best":false},{"word":"kulpagabe","best":false},{"word":"kulturagabe","best":false},{"word":"kutsagabe","best":false},{"word":"kutsugabe","best":false},{"word":"kuxidade","best":false},{"word":"labe","best":false},{"word":"lakabe","best":false},{"word":"landare","best":false},{"word":"landugabe","best":false},{"word":"langabe","best":false},{"word":"lare","best":false},{"word":"legamiagabe","best":false},{"word":"legegabe","best":false},{"word":"letragabe","best":false},{"word":"linabe","best":false},{"word":"logabe","best":false},{"word":"lohigabe","best":false},{"word":"lokabe","best":false},{"word":"lotsagabe","best":false},{"word":"lumagabe","best":false},{"word":"lurgabe","best":false},{"word":"lurjabe","best":false},{"word":"luzagabe","best":false},{"word":"makulagabe","best":false},{"word":"maneragabe","best":false},{"word":"materiagabe","best":false},{"word":"meabe","best":false},{"word":"merindade","best":false},{"word":"mihigabe","best":false},{"word":"milibare","best":false},{"word":"mingabe","best":false},{"word":"mintzogabe","best":false},{"word":"mirabe","best":true},{"word":"mokogabe","best":false},{"word":"moldegabe","best":false},{"word":"moxtare","best":false},{"word":"mugagabe","best":false},{"word":"nabe","best":false},{"word":"nahasgabe","best":false},{"word":"nahigabe","best":false},{"word":"naiade","best":false},{"word":"nare","best":true},{"word":"narriogabe","best":false},{"word":"nenufare","best":false},{"word":"nerabe","best":true},{"word":"neurrigabe","best":false},{"word":"nobedade","best":false},{"word":"noragabe","best":false},{"word":"odolgabe","best":false},{"word":"oharkabe","best":false},{"word":"ohigabe","best":false},{"word":"ohitugabe","best":false},{"word":"ohoregabe","best":false},{"word":"olabe","best":false},{"word":"ondragabe","best":false},{"word":"ondugabe","best":false},{"word":"onestidade","best":false},{"word":"onoidade","best":false},{"word":"orbaingabe","best":false},{"word":"orbangabe","best":false},{"word":"ordaingabe","best":false},{"word":"ordare","best":false},{"word":"ordugabe","best":false},{"word":"orekagabe","best":false},{"word":"ornogabe","best":false},{"word":"osagabe","best":false},{"word":"osatugabe","best":false},{"word":"ospegabe","best":false},{"word":"pairagabe","best":false},{"word":"pairugabe","best":false},{"word":"pare","best":true},{"word":"paregabe","best":false},{"word":"petalogabe","best":false},{"word":"pisugabe","best":false},{"word":"pozgabe","best":false},{"word":"premiagabe","best":false},{"word":"sabelsare","best":false},{"word":"sare","best":true},{"word":"senargabe","best":false},{"word":"sepalogabe","best":false},{"word":"sexugabe","best":false},{"word":"sinesgabe","best":false},{"word":"sinestegabe","best":false},{"word":"sorterrigabe","best":false},{"word":"suabe","best":true},{"word":"sulabe","best":false},{"word":"sustraigabe","best":false},{"word":"tatxagabe","best":false},{"word":"taxoare","best":true},{"word":"taxugabe","best":false},{"word":"termopare","best":false},{"word":"titare","best":false},{"word":"tolesgabe","best":false},{"word":"trade","best":false},{"word":"txade","best":false},{"word":"udabe","best":false},{"word":"udare","best":false},{"word":"ukigabe","best":false},{"word":"umildade","best":false},{"word":"urkabe","best":false},{"word":"urtabe","best":false},{"word":"usaingabe","best":false},{"word":"ustekabe","best":false},{"word":"xarabe","best":false},{"word":"xare","best":false},{"word":"xuribare","best":false},{"word":"zahardade","best":false},{"word":"zaingabe","best":false},{"word":"zalantzagabe","best":false},{"word":"zamage","best":false},{"word":"zankabe","best":false},{"word":"zare","best":false},{"word":"zehaztugabe","best":false},{"word":"zentzugabe","best":false},{"word":"zertzelidade","best":false},{"word":"zetabe","best":false},{"word":"zigorgabe","best":false},{"word":"zizare","best":true},{"word":"zolagabe","best":false},{"word":"zorigabe","best":false},{"word":"zuhurgabe","best":false},{"word":"zurabe","best":false},{"word":"zursare","best":false},{"word":"zutabe","best":true},{"word":"zuzengabe","best":false}]};
+const $ = id => document.getElementById(id);
+
+let family = null, word = null, pool = [], selected = new Set(), onlyBest = false;
+let dirHandle = null;
+
+/* ---------- pantailak ---------- */
+function show(id){
+  for(const s of ["setup","pick","done"]){
+    $(s).style.display = "none";
+    $(s).classList.remove("screen");
+  }
+  $(id).style.display = "block";
+  void $(id).offsetWidth;
+  $(id).classList.add("screen");
+  $("saveBar").classList.toggle("on", id === "pick");
+  window.scrollTo(0, 0);
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
+/* ---------- hitza eta errimak ---------- */
+function newWord(){
+  const families = Object.keys(DATA).filter(k => DATA[k].length > 1);
+  family = families[Math.floor(Math.random()*families.length)];
+  const list = DATA[family];
+  word = list[Math.floor(Math.random()*list.length)];
+  pool = list
+    .filter(x => x.word.toLowerCase() !== word.word.toLowerCase())
+    .sort((a,b) => (Number(b.best) - Number(a.best)) || a.word.localeCompare(b.word, "eu"));
+
+  selected = new Set();
+  onlyBest = false;
+  $("bestOnly").classList.remove("on");
+  $("filter").value = "";
+  $("word").textContent = word.word;
+  $("fam").textContent = "-" + family + " amaiera · " + pool.length + " errima";
+  renderGrid();
+  renderTray();
+  show("pick");
+}
+
+function renderGrid(){
+  const box = $("grid");
+  box.innerHTML = "";
+  const frag = document.createDocumentFragment();
+  for(const x of pool){
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip" + (x.best ? " best" : "");
+    b.textContent = x.word;
+    b.dataset.w = x.word.toLowerCase();
+    b.dataset.best = x.best ? "1" : "0";
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", () => toggleWord(x.word, b));
+    frag.appendChild(b);
+  }
+  box.appendChild(frag);
+  applyFilter();
+}
+
+function toggleWord(w, btn){
+  if(selected.has(w)) selected.delete(w); else selected.add(w);
+  if(btn){
+    btn.classList.toggle("sel", selected.has(w));
+    btn.setAttribute("aria-pressed", selected.has(w) ? "true" : "false");
+  }else{
+    const el = [...$("grid").children].find(c => c.textContent === w);
+    if(el){ el.classList.toggle("sel", selected.has(w)); el.setAttribute("aria-pressed", selected.has(w) ? "true" : "false"); }
+  }
+  renderTray();
+}
+
+function renderTray(){
+  const tray = $("tray");
+  tray.innerHTML = "";
+  const n = selected.size;
+  $("selCount").textContent = n;
+  $("saveBtn").disabled = n === 0;
+  if(!n){
+    tray.innerHTML = '<div class="empty">Oraindik ez duzu bat ere aukeratu.</div>';
+    return;
+  }
+  const bestSet = new Set(pool.filter(x => x.best).map(x => x.word));
+  const frag = document.createDocumentFragment();
+  for(const w of selected){
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = bestSet.has(w) ? "best" : "";
+    b.innerHTML = escapeHtml(w) + '<span>×</span>';
+    b.title = "Kendu";
+    b.addEventListener("click", () => toggleWord(w, null));
+    frag.appendChild(b);
+  }
+  tray.appendChild(frag);
+}
+
+function clearAll(){
+  selected = new Set();
+  for(const c of $("grid").children){ c.classList.remove("sel"); c.setAttribute("aria-pressed","false"); }
+  renderTray();
+}
+
+function toggleBest(){
+  onlyBest = !onlyBest;
+  $("bestOnly").classList.toggle("on", onlyBest);
+  applyFilter();
+}
+
+function applyFilter(){
+  const q = $("filter").value.trim().toLocaleLowerCase("eu");
+  let visible = 0;
+  for(const c of $("grid").children){
+    const okText = !q || c.dataset.w.includes(q);
+    const okBest = !onlyBest || c.dataset.best === "1";
+    const hidden = !(okText && okBest);
+    c.classList.toggle("hide", hidden);
+    if(!hidden) visible++;
+  }
+  $("listCount").textContent = visible + " / " + pool.length;
+  $("noRes").style.display = visible ? "none" : "block";
+}
+
+$("filter").addEventListener("input", applyFilter);
+
+/* ---------- Obsidian karpeta ---------- */
+const DB_NAME = "errimataldeak", STORE = "handles", KEY = "vault";
+
+function idb(mode, fn){
+  return new Promise((res, rej) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => req.result.createObjectStore(STORE);
+    req.onerror = () => rej(req.error);
+    req.onsuccess = () => {
+      const db = req.result;
+      const tx = db.transaction(STORE, mode);
+      const q = fn(tx.objectStore(STORE));
+      tx.oncomplete = () => { db.close(); res(q ? q.result : null); };
+      tx.onerror = () => { db.close(); rej(tx.error); };
+    };
+  });
+}
+
+const supported = () => typeof window.showDirectoryPicker === "function";
+
+async function connectVault(){
+  if(!supported()){
+    $("vaultWarn").textContent =
+      "Nabigatzaile honek ez du karpetan zuzenean idazten uzten (Chrome edo Edge behar da, ordenagailuan). Taldeak fitxategi gisa deskargatuko dira.";
+    return;
+  }
+  try{
+    const h = await window.showDirectoryPicker({ id: "errimataldeak", mode: "readwrite" });
+    dirHandle = h;
+    try{ await idb("readwrite", st => st.put(h, KEY)); }catch(e){}
+    updateVaultUI();
+  }catch(e){ /* erabiltzaileak utzi du */ }
+}
+
+async function hasPermission(h, ask){
+  if(!h.queryPermission) return true;
+  const opts = { mode: "readwrite" };
+  if(await h.queryPermission(opts) === "granted") return true;
+  if(!ask) return false;
+  return await h.requestPermission(opts) === "granted";
+}
+
+async function restoreVault(){
+  if(!supported()){
+    $("vaultWarn").textContent =
+      "Nabigatzaile honek ez du karpetan zuzenean idazten uzten. Taldeak .md fitxategi gisa deskargatuko dira.";
+    updateVaultUI();
+    return;
+  }
+  try{
+    const h = await idb("readonly", st => st.get(KEY));
+    if(h && await hasPermission(h, false)) dirHandle = h;
+    else if(h) dirHandle = h;   // gordeta dago, baimena gordetzean eskatuko da
+  }catch(e){}
+  updateVaultUI();
+}
+
+function updateVaultUI(){
+  const on = !!dirHandle;
+  $("vaultDot").classList.toggle("on", on);
+  $("vaultLabel").textContent = on ? (dirHandle.name || "Karpeta") : "Karpeta lotu";
+  $("vaultState").innerHTML = on
+    ? 'Lotuta: <b>' + escapeHtml(dirHandle.name || "karpeta") + '</b>'
+    : (supported() ? "Ez dago karpetarik lotuta." : "Deskarga bidez gordeko da.");
+}
+
+/* ---------- markdown ---------- */
+function two(n){ return String(n).padStart(2, "0"); }
+
+function today(){
+  const d = new Date();
+  return d.getFullYear() + "-" + two(d.getMonth()+1) + "-" + two(d.getDate());
+}
+
+function safeName(s){
+  return String(s).normalize("NFC").replace(/[\\/:*?"<>|#^\[\]]/g, "").trim() || "errima-taldea";
+}
+
+function buildMarkdown(){
+  const bestSet = new Set(pool.filter(x => x.best).map(x => x.word));
+  const chosen = [...selected].sort((a,b) =>
+    (Number(bestSet.has(b)) - Number(bestSet.has(a))) || a.localeCompare(b, "eu"));
+  const lines = [];
+  lines.push("---");
+  lines.push('hitza: "' + word.word + '"');
+  lines.push('errima: "' + family + '"');
+  lines.push("kopurua: " + chosen.length);
+  lines.push("data: " + today());
+  lines.push("tags:");
+  lines.push("  - errima-taldea");
+  lines.push("  - errima/" + family);
+  lines.push("---");
+  lines.push("");
+  lines.push("# " + word.word);
+  lines.push("");
+  lines.push("**-" + family + "** amaierako " + pool.length + " errimatik " + chosen.length + " aukeratuta.");
+  lines.push("");
+  for(const w of chosen) lines.push("- " + (bestSet.has(w) ? "**" + w + "**" : w));
+  lines.push("");
+  return lines.join("\n");
+}
+
+/* ---------- gorde ---------- */
+async function freeName(base){
+  let name = base + ".md", i = 2;
+  while(true){
+    try{
+      await dirHandle.getFileHandle(name);
+      name = base + "-" + i + ".md";
+      i++;
+    }catch(e){
+      return name;   // ez dago: erabilgarri
+    }
+  }
+}
+
+function download(name, text){
+  const blob = new Blob([text], { type: "text/markdown;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function saveGroup(){
+  if(!selected.size) return;
+  const btn = $("saveBtn");
+  btn.disabled = true;
+  const md = buildMarkdown();
+  const base = safeName(word.word);
+  let name = base + ".md", where = "";
+
+  try{
+    if(dirHandle && await hasPermission(dirHandle, true)){
+      name = await freeName(base);
+      const fh = await dirHandle.getFileHandle(name, { create: true });
+      const wr = await fh.createWritable();
+      await wr.write(md);
+      await wr.close();
+      where = "Obsidian karpetan gordeta: <b>" + escapeHtml(dirHandle.name || "karpeta") + "</b>";
+    }else{
+      download(name, md);
+      where = supported() && !dirHandle
+        ? "Fitxategia deskargatu da. Karpeta lotzen baduzu, hurrengoan zuzenean Obsidian-en gordeko da."
+        : "Fitxategia deskargatu da. Eraman ezazu Obsidian-eko karpetara.";
+    }
+  }catch(e){
+    download(name, md);
+    where = "Ezin izan da karpetan idatzi (" + escapeHtml(e.message || e) + "). Fitxategia deskargatu da.";
+  }
+
+  $("doneWhere").innerHTML = where;
+  $("doneFile").textContent = name;
+  $("preview").textContent = md;
+  btn.disabled = false;
+  show("done");
+}
+
+restoreVault();
+</script>
+</body>
+</html>
